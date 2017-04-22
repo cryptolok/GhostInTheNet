@@ -83,6 +83,10 @@ If you want to stop it:
 ```bash
 sudo GhostInTheNet.sh off eth0
 ```
+Of course, you will have to make the script executable in the first place:
+```bash
+chmod u+x GhostInTheNet.sh
+```
 
 #### Notes
 
