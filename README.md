@@ -22,7 +22,7 @@ Limitations:
 
 ## How it works
 
-The basic and primary network protocol is ARP for IPv5 and NDP (ICMPv6) for IPv6, located in the link layer, provides main connectivity in a LAN.
+The basic and primary network protocol is ARP for IPv4 and NDP (ICMPv6) for IPv6, located in the link layer, provides main connectivity in a LAN.
 
 Despite its utility and simplicity, it has numerous vulnerabilities that can lead to the MITM attack and leak of confidentiality.
 
