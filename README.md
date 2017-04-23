@@ -1,10 +1,10 @@
 # GhostInTheNet
-Ultimate Network Stealther that makes Linux a Ghost In The Net and protects from MITM
+Ultimate Network Stealther that makes Linux a Ghost In The Net and protects from MITM/DOS
 
 Properties:
 * Network Invisibility
 * Network Anonymity
-* Protects from MITM
+* Protects from MITM/DOS
 * Transparent
 * Cross-platform
 * Minimalistic
@@ -18,21 +18,22 @@ Limitations:
 * You can still be found with VLAN logs if using ethernet or by triangulation if using WiFi
 * MAC spoofing won't work if appropriate mitigations have been taken, like DAI or sticky MAC
 * Might be buggy with some CISCO switches
+* Not suitable for production servers
 
 ## How it works
 
-The basic and primary network protocol is ARP, located in the link layer, provides main connectivity in a LAN.
+The basic and primary network protocol is ARP for IPv5 and NDP (ICMPv6) for IPv6, located in the link layer, provides main connectivity in a LAN.
 
 Despite its utility and simplicity, it has numerous vulnerabilities that can lead to the MITM attack and leak of confidentiality.
 
 Patching of such a widely used standard is a practically impossible task.
 
 
-A very simple, but at the same time effective solution is to disable ARP responses on an interface and be very cautious with broadcasting.
+A very simple, but at the same time effective solution is to disable ARP and NDP responses on an interface and be very cautious with broadcasting.
 
 Considering the varieties of implementations, this means that anyone in the network wouldn't be able to communication with such host, only if the host is willing it-self.
 
-The ARP cache will be erased quickly afterwards.
+The ARP/NDP cache will be erased quickly afterwards.
 
 Here is an example schema:
 
@@ -55,9 +56,9 @@ All this is possible using simple commands in Linux kernel and a script that aut
 
 ## Analysis
 
-No ARP means no connectivity, so an absolute stealth and obscurity on the network/link layer.
+No ARP/NDP means no connectivity, so an absolute stealth and obscurity on the network/link layer.
 
-This protects from all possible MITMs (ARP, DNS, DHCP, ICMP, Port Stealing) and far less resource consuming like ArpON.
+This protects from all possible DOSes and MITMs (ARP, DNS, DHCP, ICMP, Port Stealing) and far less resource consuming like ArpON.
 
 Such mitigation implies impossibility of being scanned (nmap, arping).
 
@@ -90,9 +91,11 @@ chmod u+x GhostInTheNet.sh
 
 #### Notes
 
-ARP protocol can be exploited for defensive purpose.
+ARP/NDP protocol can be exploited for defensive purpose.
 
 Now your Poisontap is literally undetectable and your Tails is even more anonymous.
+
+You should learn some stuff about IPv6.
 
 > "Stars, hide your fires; Let not light see my black and deep desires."
 
