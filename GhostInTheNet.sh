@@ -78,7 +78,7 @@ then
 #	ifup $INTERFACE &> /dev/null
 	ifconfig $INTERFACE up
 	dhclient $INTERFACE &> /dev/null
-#TODO use already achived IP configuration to avoir broadcast ?
+#TODO use already achived IP configuration to avoid broadcast ?
 	echo 'Now you are a cyberspy, robotic guy'
 	echo
 #;;off)
