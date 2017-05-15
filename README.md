@@ -1,5 +1,5 @@
 # GhostInTheNet
-Ultimate Network Stealther that makes Linux a Ghost In The Net and protects from MITM/DOS
+Ultimate Network Stealther that makes Linux a Ghost In The Net and protects from MITM/DOS/scan
 
 Properties:
 * Network Invisibility
@@ -16,15 +16,15 @@ Dependencies:
 
 Limitations:
 * You can still be found with VLAN logs if using ethernet or by triangulation if using WiFi
-* MAC spoofing won't work if appropriate mitigations have been taken, like DAI or sticky MAC
+* MAC spoofing won't work if appropriate mitigations has been taken, like DAI or sticky MAC
 * Might be buggy with some CISCO switches
 * Not suitable for production servers
 
 ## How it works
 
-The basic and primary network protocol is ARP for IPv4 and NDP (ICMPv6) for IPv6, located in the link layer, provides main connectivity in a LAN.
+The basic and primary network protocol is ARP for IPv4 and NDP (ICMPv6) for IPv6, located in the link and network layer, provides main connectivity in a LAN.
 
-Despite its utility and simplicity, it has numerous vulnerabilities that can lead to the MITM attack and leak of confidentiality.
+Despite its utility and simplicity, it has numerous vulnerabilities that can lead to a MITM attack and leak of confidentiality.
 
 Patching of such a widely used standard is a practically impossible task.
 
@@ -64,7 +64,7 @@ Such mitigation implies impossibility of being scanned (nmap, arping).
 
 Besides, it doesn't impact a normal internet or LAN connection on the host perspective.
 
-If you're connecting to a host, it will be authorised to do so, but shortly after stopping the communication, the host will forget about you because, ARP tables won't stay long without a fresh request.
+If you're connecting to a host, it will be authorised to do so, but shortly after stopping the communication, the host will forget about you because, ARP/NDP tables won't stay long without a fresh request.
 
 Regarding the large compatibility and cross-platforming, it's very useful for offsec/pentest/redteaming as well.
 
