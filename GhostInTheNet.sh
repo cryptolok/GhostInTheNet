@@ -41,13 +41,29 @@ then
 	exit 2
 fi
 
+if ! which ethtool >/dev/null 2>&1 ; then
+    echo "You will need ethtool."
+    exit 1;
+fi
+
+# let's use ifconfig by default
+CMD=$( which ifconfig >/dev/null 2>&1 )
+if [[ $? -gt 0 ]]; then
+    # or ip if not present
+    CMD=$( which ip )
+fi
+
 #case $SWITCH in on)
 if [[ "$SWITCH" = "on" ]]
 then
 	echo 'Spoofing MAC address ...'
 	echo
 #	ifdown $INTERFACE &> /dev/null
-	ifconfig $INTERFACE down 
+    if [[ $CMD =~ .*ifconfig ]]; then
+        $CMD $INTERFACE down
+    else
+	    $CMD link set $INTERFACE down
+    fi
 #[[ $? -eq 0 ]] || { echo -e 'Wrong INTERFACE? Try eth0 or wlan0 or execute `ip a`' ; exit 3; }
 	if [[ $? -ne 0 ]]
 	then
@@ -58,7 +74,12 @@ then
 	MAC=$(echo $RANDOM|md5sum|sed 's/^\(..\)\(..\)\(..\)\(..\)\(..\).*$/64:\1:\2:\3:\4:\5/')
 # random MAC, but with 0x64 in the beginning to avoid reserved addresses (unicast, etc)
 #TODO add vendors choice (dell,hp,intel,vmware,cisco,belkin...) ?
-	ifconfig $INTERFACE hw ether $MAC
+    if [[ $CMD =~ .*ifconfig ]]; then
+	    $CMD $INTERFACE hw ether $MAC
+    else
+        $CMD link set dev $INTERFACE address $MAC
+    fi
+
 #	ip link set $INTERFACE address $MAC > /dev/null
 	echo "New MAC addresse : $MAC"
 	echo
@@ -77,7 +98,11 @@ then
 	echo 'If not connected or taking too long - reconnect manually'
 	echo
 #	ifup $INTERFACE &> /dev/null
-	ifconfig $INTERFACE up
+    if [[ $CMD =~ .*ifconfig ]]; then
+	    $CMD $INTERFACE up
+    else
+        $CMD link set $INTERFACE up
+    fi
 	dhclient $INTERFACE &> /dev/null
 #TODO use already achived IP configuration to avoid broadcast ?
 	echo 'Now you are a cyberspy, robotic guy'
@@ -88,11 +113,19 @@ then
 	echo 'Reinitializing MAC address ...'
 	echo
 #	ifdown $INTERFACE &> /dev/null
-	ifconfig $INTERFACE down 
+    if [[ $CMD =~ .*ifconfig ]]; then
+	    $CMD $INTERFACE down 
+    else
+        $CMD link set $INTERFACE down
+    fi
 #	MAC=$(ethtool -P eth0 | cut -d ':' -f 2-)
 	MAC=$(ethtool -P $INTERFACE)
 	MAC=${MAC#*:}
-	ifconfig $INTERFACE hw ether $MAC
+    if [[ $CMD =~ .*ifconfig ]]; then
+	    $CMD $INTERFACE hw ether $MAC
+    else
+        $CMD link set dev $INTERFACE address $MAC
+    fi
 #	ip link set $INTERFACE address $MAC &> /dev/null
 	if [[ $? -ne 0 ]]
 	then
@@ -110,7 +143,11 @@ then
 	echo 'If not connected or taking too long - reconnect manually'
 	echo
 #	ifup $INTERFACE &> /dev/null
-	ifconfig $INTERFACE up
+    if [[ $CMD =~ .*ifconfig ]]; then
+	    $CMD $INTERFACE up
+    else
+        $CMD link set $INTERFACE up
+    fi
 	dhclient $INTERFACE &> /dev/null
 	echo 'Waiting like a ghost, when you need me the most'
 	echo
