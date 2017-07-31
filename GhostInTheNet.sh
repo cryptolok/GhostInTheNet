@@ -15,6 +15,7 @@ echo '
 				   	 /		 \	
 					/_________________\	
 '
+echo -e "\e[0m"
 
 # check for root access
 #[ "${UID}" -eq 0 ] || { echo -e "sudo !!\n" ; exit 1; }
