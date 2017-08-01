@@ -68,7 +68,7 @@ then
         if [[ $(which ethtool) ]]
         then
             ORGMAC=$(ethtool -P $INTERFACE)
-            ORGMAC=${MAC#*:}
+            ORGMAC=${ORGMAC#*:}
         else
             ORGMAC=$(cat /etc/udev/rules.d/70-persistent-net.rules | grep $INTERFACE | cut -d '"' -f 8)
         fi
@@ -138,7 +138,7 @@ then
         if [[ $(which ethtool) ]]
         then
             ORGMAC=$(ethtool -P $INTERFACE)
-            ORGMAC=${MAC#*:}
+            ORGMAC=${ORGMAC#*:}
         else
             ORGMAC=$(cat /etc/udev/rules.d/70-persistent-net.rules | grep $INTERFACE | cut -d '"' -f 8)
         fi
