@@ -41,9 +41,10 @@ then
 	exit 2
 fi
 
-if ! which ethtool >/dev/null 2>&1 ; then
-    echo "You will need ethtool."
-    exit 1;
+if [ ! $(which ethtool) ] && [ ! -f /etc/udev/rules.d/70-persistent-net.rules ]
+then
+	echo "You will need ethtool"
+	exit 1
 fi
 
 # let's use ifconfig by default
@@ -119,8 +120,13 @@ then
         $CMD link set $INTERFACE down
     fi
 #	MAC=$(ethtool -P eth0 | cut -d ':' -f 2-)
+    if [[ $(which ethtool) ]]
+    then
 	MAC=$(ethtool -P $INTERFACE)
 	MAC=${MAC#*:}
+    else
+    	MAC=$(cat /etc/udev/rules.d/70-persistent-net.rules | grep $INTERFACE | cut -d '"' -f 8)
+    fi
     if [[ $CMD =~ .*ifconfig ]]; then
 	    $CMD $INTERFACE hw ether $MAC
     else
