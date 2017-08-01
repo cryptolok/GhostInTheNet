@@ -31,6 +31,9 @@ fi
 #SWITCH=$(echo $1 | tr '[:upper:]' '[:lower:]')
 SWITCH=${1,,*}
 INTERFACE=$2
+TMPMAC=/tmp/mac.ghost
+# here we are going to store the original MAC address
+ORGMAC=""
 
 # network stealther
 #[ $# -gt 1 ] || { echo 'Usage: GhostInTheNet on|off $INTERFACE'; exit 2; }
@@ -41,22 +44,38 @@ then
 	exit 2
 fi
 
-if [ ! $(which ethtool) ] && [ ! -f /etc/udev/rules.d/70-persistent-net.rules ]
-then
-	echo "You will need ethtool"
-	exit 1
-fi
-
 # let's use ifconfig by default
-CMD=$( which ifconfig >/dev/null 2>&1 )
+CMD=$( which ifconfig 2>/dev/null)
 if [[ $? -gt 0 ]]; then
     # or ip if not present
     CMD=$( which ip )
 fi
 
+echo $CMD
+
 #case $SWITCH in on)
 if [[ "$SWITCH" = "on" ]]
 then
+    # storing original MAC
+    if [ ! $(which ethtool) ] && [ ! -f /etc/udev/rules.d/70-persistent-net.rules ]
+    then
+        if [[ $CMD =~ .*ifconfig ]]; then
+            ORGMAC=$( $CMD $INTERFACE | grep ether | awk '{print $2}' )
+        else
+            ORGMAC=$( $CMD link show $INTERFACE | awk '$1~/^link/{print $2}' )
+        fi
+    else
+        if [[ $(which ethtool) ]]
+        then
+            ORGMAC=$(ethtool -P $INTERFACE)
+            ORGMAC=${MAC#*:}
+        else
+            ORGMAC=$(cat /etc/udev/rules.d/70-persistent-net.rules | grep $INTERFACE | cut -d '"' -f 8)
+        fi
+    fi
+
+    echo "Saving original MAC address for $INTERFACE"
+    echo -n $ORGMAC > $TMPMAC
 	echo 'Spoofing MAC address ...'
 	echo
 #	ifdown $INTERFACE &> /dev/null
@@ -111,27 +130,30 @@ then
 #;;off)
 elif [[ "$SWITCH" = "off" ]]
 then
+    # load original MAC address
+    if [ ! $(which ethtool) ] && [ ! -f /etc/udev/rules.d/70-persistent-net.rules ]
+    then
+        ORGMAC=$( cat $TMPMAC )
+    else
+        if [[ $(which ethtool) ]]
+        then
+            ORGMAC=$(ethtool -P $INTERFACE)
+            ORGMAC=${MAC#*:}
+        else
+            ORGMAC=$(cat /etc/udev/rules.d/70-persistent-net.rules | grep $INTERFACE | cut -d '"' -f 8)
+        fi
+    fi
 	echo 'Reinitializing MAC address ...'
 	echo
 #	ifdown $INTERFACE &> /dev/null
     if [[ $CMD =~ .*ifconfig ]]; then
 	    $CMD $INTERFACE down 
+	    $CMD $INTERFACE hw ether $ORGMAC
     else
         $CMD link set $INTERFACE down
+        $CMD link set dev $INTERFACE address $ORGMAC
     fi
-#	MAC=$(ethtool -P eth0 | cut -d ':' -f 2-)
-    if [[ $(which ethtool) ]]
-    then
-	MAC=$(ethtool -P $INTERFACE)
-	MAC=${MAC#*:}
-    else
-    	MAC=$(cat /etc/udev/rules.d/70-persistent-net.rules | grep $INTERFACE | cut -d '"' -f 8)
-    fi
-    if [[ $CMD =~ .*ifconfig ]]; then
-	    $CMD $INTERFACE hw ether $MAC
-    else
-        $CMD link set dev $INTERFACE address $MAC
-    fi
+
 #	ip link set $INTERFACE address $MAC &> /dev/null
 	if [[ $? -ne 0 ]]
 	then
@@ -155,7 +177,8 @@ then
         $CMD link set $INTERFACE up
     fi
 	dhclient $INTERFACE &> /dev/null
-	echo 'Waiting like a ghost, when you need me the most'
+	rm -f $TMPMAC
+    echo 'Waiting like a ghost, when you need me the most'
 	echo
 #;;*)
 else
