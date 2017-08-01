@@ -131,8 +131,18 @@ then
 elif [[ "$SWITCH" = "off" ]]
 then
     # load original MAC address
-    ORGMAC=$( cat $TMPMAC )
-
+    if [ ! $(which ethtool) ] && [ ! -f /etc/udev/rules.d/70-persistent-net.rules ]
+    then
+        ORGMAC=$( cat $TMPMAC )
+    else
+        if [[ $(which ethtool) ]]
+        then
+            ORGMAC=$(ethtool -P $INTERFACE)
+            ORGMAC=${MAC#*:}
+        else
+            ORGMAC=$(cat /etc/udev/rules.d/70-persistent-net.rules | grep $INTERFACE | cut -d '"' -f 8)
+        fi
+    fi
 	echo 'Reinitializing MAC address ...'
 	echo
 #	ifdown $INTERFACE &> /dev/null
