@@ -1,6 +1,8 @@
 # GhostInTheNet
 Ultimate Network Stealther that makes Linux a Ghost In The Net and protects from MITM/DOS/scan
 
+![](https://pbs.twimg.com/media/C9-2cMVWsAII0Mw.jpg)
+
 Properties:
 * Network Invisibility
 * Network Anonymity
