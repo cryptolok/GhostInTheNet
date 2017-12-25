@@ -114,6 +114,8 @@ then
 	ip6tables -I INPUT 2 -i $INTERFACE --protocol icmpv6 --icmpv6-type neighbor-solicit -j DROP
 # ignore ICMPv6/NDP neighbor solicitation requests type 135 code 0
 # IPv6 scanning isn't too much realistic though
+	hostname $RANDOM
+	echo 'New hostname : '$(hostname)
 	echo 'Reinitializing network interface ...'
 	echo 'If not connected or taking too long - reconnect manually'
 	echo
@@ -167,6 +169,8 @@ then
 	sysctl net.ipv4.conf.$INTERFACE.arp_announce=0 > /dev/null
 	ip6tables -D INPUT -i $INTERFACE --protocol icmpv6 --icmpv6-type echo-request -j DROP
 	ip6tables -D INPUT -i $INTERFACE --protocol icmpv6 --icmpv6-type neighbor-solicit -j DROP
+	echo 'Restoring hostname ...'
+	hostname $(cat /etc/hostname)
 	echo 'Reinitializing network interface ...'
 	echo 'If not connected or taking too long - reconnect manually'
 	echo
