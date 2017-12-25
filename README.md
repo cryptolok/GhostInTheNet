@@ -54,6 +54,8 @@ A >>>    I'm not giving it    >>> B
 
 To increase privacy, it's advised to spoof the MAC address, which will provide a better concealment.
 
+Moreover, the hostname has to be changed (especially if using DHCP).
+
 All this is possible using simple commands in Linux kernel and a script that automates it all.
 
 ## Analysis
