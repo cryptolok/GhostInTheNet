@@ -125,6 +125,7 @@ then
     else
         $CMD link set $INTERFACE up
     fi
+    	/etc/init.d/network-manager restart
 	dhclient $INTERFACE &> /dev/null
 #TODO use already achived IP configuration to avoid broadcast ?
 	echo 'Now you are a cyberspy, robotic guy'
@@ -180,6 +181,7 @@ then
     else
         $CMD link set $INTERFACE up
     fi
+    	/etc/init.d/network-manager restart
 	dhclient $INTERFACE &> /dev/null
 	rm -f $TMPMAC
     echo 'Waiting like a ghost, when you need me the most'
