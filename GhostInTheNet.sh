@@ -121,12 +121,15 @@ then
 	echo 'If not connected or taking too long - reconnect manually'
 	echo
 #	ifup $INTERFACE &> /dev/null
+	nmcli radio wifi off
+	rfkill unblock wlan
     if [[ $CMD =~ .*ifconfig ]]; then
 	    $CMD $INTERFACE up
     else
         $CMD link set $INTERFACE up
     fi
     	/etc/init.d/network-manager start
+	sleep 5
 	dhclient $INTERFACE &> /dev/null
 #TODO use already achived IP configuration to avoid broadcast ?
 	echo 'Now you are a cyberspy, robotic guy'
@@ -153,9 +156,13 @@ then
 	/etc/init.d/network-manager stop
     if [[ $CMD =~ .*ifconfig ]]; then
 	    $CMD $INTERFACE down 
+	    rfkill unblock wlan
+	    nmcli radio wifi on
 	    $CMD $INTERFACE hw ether $ORGMAC
     else
         $CMD link set $INTERFACE down
+	rfkill unblock wlan
+	nmcli radio wifi on
         $CMD link set dev $INTERFACE address $ORGMAC
     fi
 
@@ -184,6 +191,7 @@ then
         $CMD link set $INTERFACE up
     fi
     	/etc/init.d/network-manager start
+	sleep 5
 	dhclient $INTERFACE &> /dev/null
 	rm -f $TMPMAC
     echo 'Waiting like a ghost, when you need me the most'
