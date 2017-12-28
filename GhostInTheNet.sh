@@ -79,6 +79,7 @@ then
 	echo 'Spoofing MAC address ...'
 	echo
 #	ifdown $INTERFACE &> /dev/null
+	/etc/init.d/network-manager stop
     if [[ $CMD =~ .*ifconfig ]]; then
         $CMD $INTERFACE down
     else
@@ -125,7 +126,7 @@ then
     else
         $CMD link set $INTERFACE up
     fi
-    	/etc/init.d/network-manager restart
+    	/etc/init.d/network-manager start
 	dhclient $INTERFACE &> /dev/null
 #TODO use already achived IP configuration to avoid broadcast ?
 	echo 'Now you are a cyberspy, robotic guy'
@@ -149,6 +150,7 @@ then
 	echo 'Reinitializing MAC address ...'
 	echo
 #	ifdown $INTERFACE &> /dev/null
+	/etc/init.d/network-manager stop
     if [[ $CMD =~ .*ifconfig ]]; then
 	    $CMD $INTERFACE down 
 	    $CMD $INTERFACE hw ether $ORGMAC
@@ -181,7 +183,7 @@ then
     else
         $CMD link set $INTERFACE up
     fi
-    	/etc/init.d/network-manager restart
+    	/etc/init.d/network-manager start
 	dhclient $INTERFACE &> /dev/null
 	rm -f $TMPMAC
     echo 'Waiting like a ghost, when you need me the most'
