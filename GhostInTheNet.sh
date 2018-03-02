@@ -118,6 +118,7 @@ then
 # ignore ICMPv6/NDP neighbor solicitation requests type 135 code 0
 # IPv6 scanning isn't too much realistic though
 	hostname $RANDOM
+	xauth add "$(hostname)/$(xauth list | cut -d '/' -f 2)"
 	echo 'New hostname : '$(hostname)
 	echo 'Reinitializing network interface ...'
 	echo 'If not connected or taking too long - reconnect manually'
@@ -135,14 +136,6 @@ then
 	sleep 5
 	dhclient $INTERFACE &> /dev/null
 #TODO use already achived IP configuration to avoid broadcast ?
-	echo "Do you plan to launch any graphical application as root within user session? (y/n)"
-	echo "!!! WARNING !!! this will leave your hostname as it is, thus not anonymizing it"
-	read xroot
-	if [[ "$xroot" = "y" ]]
-	then
-		echo 'Restoring hostname ...'
-		hostname $(cat /etc/hostname)
-	fi
 	echo 'Now you are a cyberspy, robotic guy'
 	echo
 #;;off)
@@ -192,6 +185,7 @@ then
 	ip6tables -D INPUT -i $INTERFACE --protocol icmpv6 --icmpv6-type echo-request -j DROP
 	ip6tables -D INPUT -i $INTERFACE --protocol icmpv6 --icmpv6-type neighbor-solicit -j DROP
 	echo 'Restoring hostname ...'
+	xauth remove "$(hostname)/$(xauth list | cut -d '/' -f 2)"
 	hostname $(cat /etc/hostname)
 	echo 'Reinitializing network interface ...'
 	echo 'If not connected or taking too long - reconnect manually'
