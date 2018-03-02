@@ -136,7 +136,7 @@ then
 	dhclient $INTERFACE &> /dev/null
 #TODO use already achived IP configuration to avoid broadcast ?
 	echo "Do you plan to launch any graphical application as root within user session? (y/n)"
-	echo "!!! WARNING !!! this will leave your hostname as it is, thus not anonimizing it"
+	echo "!!! WARNING !!! this will leave your hostname as it is, thus not anonymizing it"
 	read xroot
 	if [[ "$xroot" = "y" ]]
 	then
