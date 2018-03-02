@@ -135,6 +135,14 @@ then
 	sleep 5
 	dhclient $INTERFACE &> /dev/null
 #TODO use already achived IP configuration to avoid broadcast ?
+	echo "Do you plan to launch any graphical application as root within user session? (y/n)"
+	echo "!!! WARNING !!! this will leave your hostname as it is, thus not anonimizing it"
+	read xroot
+	if [[ "$xroot" = "y" ]]
+	then
+		echo 'Restoring hostname ...'
+		hostname $(cat /etc/hostname)
+	fi
 	echo 'Now you are a cyberspy, robotic guy'
 	echo
 #;;off)
