@@ -118,7 +118,7 @@ then
 # ignore ICMPv6/NDP neighbor solicitation requests type 135 code 0
 # IPv6 scanning isn't too much realistic though
 	hostname $RANDOM
-	xauth add $(hostname)/$(xauth list | cut -d '/' -f 2)
+	xauth -f $XAUTHORITY add $(hostname)/$(xauth list | cut -d '/' -f 2)
 	echo 'New hostname : '$(hostname)
 	echo 'Reinitializing network interface ...'
 	echo 'If not connected or taking too long - reconnect manually'
@@ -185,7 +185,7 @@ then
 	ip6tables -D INPUT -i $INTERFACE --protocol icmpv6 --icmpv6-type echo-request -j DROP
 	ip6tables -D INPUT -i $INTERFACE --protocol icmpv6 --icmpv6-type neighbor-solicit -j DROP
 	echo 'Restoring hostname ...'
-	xauth remove $(hostname)/$(xauth list | cut -d '/' -f 2)
+	xauth -f $XAUTHORITY remove $(hostname)/$(xauth list | cut -d '/' -f 2)
 	hostname $(cat /etc/hostname)
 	echo 'Reinitializing network interface ...'
 	echo 'If not connected or taking too long - reconnect manually'
