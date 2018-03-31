@@ -21,7 +21,7 @@ echo -e "\e[0m"
 #[ "${UID}" -eq 0 ] || { echo -e "sudo !!\n" ; exit 1; }
 if [[ $UID -ne 0 ]]
 then
-	echo 'sudo !!'
+	echo 'sudo bash GhostInTheNet.sh'
 	echo
 	exit 1
 fi
