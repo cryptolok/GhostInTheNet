@@ -80,7 +80,7 @@ Mitigation and having real supervision on the network will require deep reconfig
 
 You can execute the script after the connection to the network or just before:
 ```bash
-sudo GhostInTheNet.sh on eth0
+sudo bash GhostInTheNet.sh on eth0
 ```
 This will activate the solution until reboot.
 
