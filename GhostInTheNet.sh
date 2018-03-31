@@ -51,8 +51,6 @@ if [[ $? -gt 0 ]]; then
     CMD=$( which ip )
 fi
 
-echo $CMD
-
 #case $SWITCH in on)
 if [[ "$SWITCH" = "on" ]]
 then
@@ -79,8 +77,8 @@ then
 	echo 'Spoofing MAC address ...'
 	echo
 #	ifdown $INTERFACE &> /dev/null
-	nmcli con down $INTERFACE
-	/etc/init.d/network-manager stop
+	nmcli con down $INTERFACE &>/dev/null
+	/etc/init.d/network-manager stop &>/dev/null
     if [[ $CMD =~ .*ifconfig ]]; then
         $CMD $INTERFACE down
     else
@@ -134,14 +132,16 @@ then
     else
         $CMD link set $INTERFACE up
     fi
-    	/etc/init.d/network-manager start
-	nmcli con up $INTERFACE
+    	/etc/init.d/network-manager start &>/dev/null
+	nmcli con up $INTERFACE &>/dev/null
 	sleep 5
 	dhclient $INTERFACE &> /dev/null
 #TODO use already achived IP configuration to avoid broadcast ?
 	echo 'Now you are a cyberspy, robotic guy'
 	echo
 #;;off)
+
+
 elif [[ "$SWITCH" = "off" ]]
 then
     # load original MAC address
@@ -160,8 +160,8 @@ then
 	echo 'Reinitializing MAC address ...'
 	echo
 #	ifdown $INTERFACE &> /dev/null
-	nmcli con down $INTERFACE
-	/etc/init.d/network-manager stop
+	nmcli con down $INTERFACE &>/dev/null
+	/etc/init.d/network-manager stop &>/dev/null
     if [[ $CMD =~ .*ifconfig ]]; then
 	    $CMD $INTERFACE down 
 #	    rfkill unblock wlan
@@ -200,8 +200,8 @@ then
     else
         $CMD link set $INTERFACE up
     fi
-    	/etc/init.d/network-manager start
-	nmcli con up $INTERFACE
+    	/etc/init.d/network-manager start &>/dev/null
+	nmcli con up $INTERFACE &>/dev/null
 	sleep 5
 	dhclient $INTERFACE &> /dev/null
 	rm -f $TMPMAC
