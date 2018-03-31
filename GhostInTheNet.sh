@@ -135,8 +135,10 @@ then
     fi
     	/etc/init.d/network-manager start &>/dev/null
 	nmcli con up $INTERFACE &>/dev/null
-	sleep 5
+	sleep 3
 	dhclient $INTERFACE &> /dev/null
+	sleep 2
+	/etc/init.d/network-manager restart &>/dev/null
 #TODO use already achived IP configuration to avoid broadcast ?
 	echo 'Now you are a cyberspy, robotic guy'
 	echo
