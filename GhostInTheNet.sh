@@ -115,7 +115,8 @@ then
 	ip6tables -I INPUT 2 -i $INTERFACE --protocol icmpv6 --icmpv6-type neighbor-solicit -j DROP
 # ignore ICMPv6/NDP neighbor solicitation requests type 135 code 0
 # IPv6 scanning isn't too much realistic though
-	hostnamectl set-hostname $RANDOM
+#	hostnamectl set-hostname $RANDOM
+	hostname $RANDOM
 # hostnamectl is preferable because of network-manager
 	xauth add $(hostname)/$(xauth list | cut -d '/' -f 2 | tail -n 1)
 	chown $(echo $XAUTHORITY | cut -d '/' -f 3): $XAUTHORITY 2>/dev/null
@@ -190,7 +191,8 @@ then
 	echo 'Restoring hostname ...'
 	xauth remove $(hostname)/$(xauth list | cut -d '/' -f 2 | tail -n 1) 2>/dev/null
 	chown $(echo $XAUTHORITY | cut -d '/' -f 3): $XAUTHORITY 2>/dev/null
-	hostnamectl set-hostname $(cat /etc/hostname)
+#	hostnamectl set-hostname $(cat /etc/hostname)
+	hostname $(cat /etc/hostname)
 	echo 'Reinitializing network interface ...'
 	echo 'If not connected or taking too long - reconnect manually'
 	echo
