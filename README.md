@@ -17,7 +17,7 @@ Dependencies:
 	- root privileges - for kernel controlling
 
 Limitations:
-* You can still be found with VLAN logs if using ethernet or by [triangulation/broadcast](https://cryptolok.blogspot.com/2017/08/practical-wifi-hosts-triangulation-with.html) if using WiFi
+* You can still be found with VLAN logs if using ethernet or by [triangulation](https://cryptolok.blogspot.com/2017/08/practical-wifi-hosts-triangulation-with.html)/beacons if using WiFi
 * MAC spoofing won't work if appropriate mitigations has been taken, like DAI or sticky MAC
 * Might be buggy with some CISCO switches
 * Not suitable for production servers
