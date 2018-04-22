@@ -135,8 +135,14 @@ then
     fi
     	/etc/init.d/network-manager start &>/dev/null
 	nmcli con up $INTERFACE &>/dev/null
-	sleep 5
-	dhclient $INTERFACE &> /dev/null
+	echo 'Perform DHCP (unless you want to specify your own IP)? (y/n)'
+	read dhcp
+	dhcp=${dhcp,,*}
+	dhcp=${dhcp::1}
+	if [[ "$dhcp" = "y" ]]
+	then
+		dhclient $INTERFACE &> /dev/null
+	fi
 #TODO use already achived IP configuration to avoid broadcast ?
 	echo 'Now you are a cyberspy, robotic guy'
 	echo
@@ -204,8 +210,14 @@ then
     fi
     	/etc/init.d/network-manager start &>/dev/null
 	nmcli con up $INTERFACE &>/dev/null
-	sleep 3
-	dhclient $INTERFACE &> /dev/null
+	echo 'Perform DHCP (unless you want to specify your own IP)? (y/n)'
+	read dhcp
+	dhcp=${dhcp,,*}
+	dhcp=${dhcp::1}
+	if [[ "$dhcp" = "y" ]]
+	then
+		dhclient $INTERFACE &> /dev/null
+	fi
 	sleep 2
 	/etc/init.d/network-manager restart &>/dev/null
 	rm -f $TMPMAC
