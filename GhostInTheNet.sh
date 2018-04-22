@@ -115,13 +115,6 @@ then
 	ip6tables -I INPUT 2 -i $INTERFACE --protocol icmpv6 --icmpv6-type neighbor-solicit -j DROP
 # ignore ICMPv6/NDP neighbor solicitation requests type 135 code 0
 # IPv6 scanning isn't too much realistic though
-#	hostnamectl set-hostname $RANDOM
-	hostname $RANDOM
-# hostnamectl is preferable because of network-manager
-	xauth add $(hostname)/$(xauth list | cut -d '/' -f 2 | tail -n 1)
-	chown $(echo $XAUTHORITY | cut -d '/' -f 3): $XAUTHORITY 2>/dev/null
-# ~/.Xauthority file must have user's privileges with an authorized hostname
-	echo 'New hostname : '$(hostname)
 	echo 'Reinitializing network interface ...'
 	echo 'If not connected or taking too long - reconnect manually'
 	echo
@@ -135,6 +128,13 @@ then
     fi
     	/etc/init.d/network-manager start &>/dev/null
 	nmcli con up $INTERFACE &>/dev/null
+#	hostnamectl set-hostname $RANDOM
+	hostname $RANDOM
+# hostnamectl is preferable because of network-manager
+	xauth add $(hostname)/$(xauth list | cut -d '/' -f 2 | tail -n 1)
+	chown $(echo $XAUTHORITY | cut -d '/' -f 3): $XAUTHORITY 2>/dev/null
+# ~/.Xauthority file must have user's privileges with an authorized hostname
+	echo 'New hostname : '$(hostname)
 	echo 'Perform DHCP (unless you want to specify your own IP)? (y/n)'
 	read dhcp
 	dhcp=${dhcp,,*}
