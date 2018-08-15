@@ -122,13 +122,10 @@ then
 #	rfkill unblock wlan
     if [[ $CMD =~ .*ifconfig ]]; then
 	    $CMD $INTERFACE up
-	    /etc/init.d/network-manager start &>/dev/null
     else
         $CMD link set $INTERFACE up
-	echo 'Erasing previous IP...'
-	/etc/init.d/network-manager start &>/dev/null
-	$CMD addr del $(ip addr show dev $INTERFACE | grep inet | head -n 1 | cut -d ' ' -f 6 | cut -d '/' -f 1) dev $INTERFACE
     fi
+    	/etc/init.d/network-manager start &>/dev/null
 #	hostnamectl set-hostname $RANDOM
 	hostname $RANDOM
 # hostnamectl is preferable because of network-manager
@@ -144,6 +141,11 @@ then
 	if [[ "$dhcp" = "y" ]]
 	then
 		dhclient $INTERFACE &> /dev/null
+	fi
+	if [[ $CMD =~ .*ip ]]
+	then
+		echo 'Erasing previous IP...'
+		$CMD addr del $(ip addr show dev $INTERFACE | grep inet | head -n 1 | cut -d ' ' -f 6 | cut -d '/' -f 1) dev $INTERFACE
 	fi
 #TODO use already achived IP configuration to avoid broadcast ?
 	echo 'Now you are a cyberspy, robotic guy'
