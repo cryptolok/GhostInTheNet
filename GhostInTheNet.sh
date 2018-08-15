@@ -83,8 +83,6 @@ then
         $CMD $INTERFACE down
     else
 	    $CMD link set $INTERFACE down
-	    echo 'Erasing previous IP...'
-	    $CMD addr del $(ip addr show dev $INTERFACE | grep inet | head -n 1 | cut -d ' ' -f 6 | cut -d '/' -f 1) dev $INTERFACE
     fi
 #[[ $? -eq 0 ]] || { echo -e 'Wrong INTERFACE? Try eth0 or wlan0 or execute `ip a`' ; exit 3; }
 	if [[ $? -ne 0 ]]
@@ -126,6 +124,8 @@ then
 	    $CMD $INTERFACE up
     else
         $CMD link set $INTERFACE up
+	echo 'Erasing previous IP...'
+	$CMD addr del $(ip addr show dev $INTERFACE | grep inet | head -n 1 | cut -d ' ' -f 6 | cut -d '/' -f 1) dev $INTERFACE
     fi
     	/etc/init.d/network-manager start &>/dev/null
 #	hostnamectl set-hostname $RANDOM
