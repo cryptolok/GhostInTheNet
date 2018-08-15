@@ -91,8 +91,7 @@ then
 		echo
 		exit 3
 	fi
-	MAC=$(echo $RANDOM|md5sum|sed 's/^\(..\)\(..\)\(..\).*$/48:0f:cf:\1:\2:\3/')
-#	MAC="480fcf"$(head -c 6 /proc/sys/kernel/random/uuid)
+	MAC=$(head -c 6 /proc/sys/kernel/random/uuid | sed 's/^\(..\)\(..\)\(..\).*$/48:0f:cf:\1:\2:\3/')
 # random HP vendor MAC, to avoid reserved addresses (unicast, etc) and MAC blacklisting due to lack of randomness
 #TODO add vendors choice (dell,hp,intel,vmware,cisco,belkin...) ?
     if [[ $CMD =~ .*ifconfig ]]; then
