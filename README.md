@@ -33,7 +33,7 @@ Patching of such a widely used standard is a practically impossible task.
 
 A very simple, but at the same time effective [solution](https://gist.github.com/cryptolok/b9b1ed6e8f91b17d53ef5d3d7d0c17a9) is to disable ARP and NDP responses on an interface and be very cautious with broadcasting.
 
-Considering the varieties of implementations, this means that anyone in the network wouldn't be able to communication with such host, only if the host is willing it-self.
+Considering the varieties of implementations, this means that anyone in the network wouldn't be able to communicatate with such host, only if the host is willing it-self.
 
 The ARP/NDP cache will be erased quickly afterwards.
 
