@@ -122,12 +122,13 @@ then
 #	rfkill unblock wlan
     if [[ $CMD =~ .*ifconfig ]]; then
 	    $CMD $INTERFACE up
+	    /etc/init.d/network-manager start &>/dev/null
     else
         $CMD link set $INTERFACE up
 	echo 'Erasing previous IP...'
+	/etc/init.d/network-manager start &>/dev/null
 	$CMD addr del $(ip addr show dev $INTERFACE | grep inet | head -n 1 | cut -d ' ' -f 6 | cut -d '/' -f 1) dev $INTERFACE
     fi
-    	/etc/init.d/network-manager start &>/dev/null
 #	hostnamectl set-hostname $RANDOM
 	hostname $RANDOM
 # hostnamectl is preferable because of network-manager
