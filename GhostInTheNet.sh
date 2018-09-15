@@ -142,11 +142,13 @@ then
 	then
 		dhclient $INTERFACE &> /dev/null
 	fi
-#	if [[ $CMD =~ .*ip ]]
-#	then
-#		echo 'Erasing previous IP...'
-#		$CMD addr del $(ip addr show dev $INTERFACE | grep inet | head -n 1 | cut -d ' ' -f 6 | cut -d '/' -f 1) dev $INTERFACE
-#	fi
+	OS=$(uname -v)
+	if [ $CMD =~ .*ip ] && [ "$OS" =~ .*Debian ]
+	then
+		echo 'Erasing previous IP...'
+		sleep 3
+		$CMD addr del $(ip addr show dev $INTERFACE | grep inet | head -n 1 | cut -d ' ' -f 6 | cut -d '/' -f 1) dev $INTERFACE
+	fi
 # TODO use already achived IP configuration to avoid broadcast ?
 # TODO investigate previous IP for OSes
 	echo 'Now you are a cyberspy, robotic guy'
