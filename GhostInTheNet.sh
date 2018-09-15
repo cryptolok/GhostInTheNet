@@ -145,7 +145,7 @@ then
 	if [[ $CMD =~ .*ip ]]
 	then
 		echo 'Erasing previous IP...'
-		sleep 3
+		sleep 5
 		$CMD addr del $(ip addr show dev $INTERFACE | grep inet | head -n 1 | cut -d ' ' -f 6 | cut -d '/' -f 1) dev $INTERFACE
 	fi
 # TODO use already achived IP configuration to avoid broadcast ?
