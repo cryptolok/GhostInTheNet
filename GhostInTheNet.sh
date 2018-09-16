@@ -128,12 +128,13 @@ then
     	/etc/init.d/network-manager start &>/dev/null
 #	hostnamectl set-hostname $RANDOM
 	hostname $RANDOM
+	echo 'New hostname : '$(hostname)
+# TODO analyze hostname order change and revert
 # hostnamectl is preferable because of network-manager
 	xauth add $(hostname)/$(xauth list | cut -d '/' -f 2 | tail -n 1)
 	chown $(echo $XAUTHORITY | cut -d '/' -f 3): $XAUTHORITY 2>/dev/null
 # ~/.Xauthority file must have user's privileges with an authorized hostname
 #	nmcli con up $INTERFACE &>/dev/null
-	echo 'New hostname : '$(hostname)
 	echo 'Perform DHCP (unless you want to specify your own IP)? (y/n)'
 	read dhcp
 	dhcp=${dhcp,,*}
@@ -148,7 +149,7 @@ then
 		sleep 3
 		$CMD addr del $(ip addr show dev $INTERFACE | grep second | cut -d ' ' -f 6 | cut -d '/' -f 1) dev $INTERFACE
 	fi
-# TODO use already achived IP configuration to avoid broadcast ?
+# TODO use already achived IP configuration to avoid broadcast ? done if using ip cmd
 # TODO investigate previous IP for different OSes or just ip cmd
 	echo 'Now you are a cyberspy, robotic guy'
 	echo
