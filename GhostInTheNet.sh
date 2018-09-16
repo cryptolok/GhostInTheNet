@@ -33,6 +33,8 @@ SWITCH=${1,,*}
 INTERFACE=$2
 TMPMAC=/tmp/mac.ghost
 # here we are going to store the original MAC address
+ORGHOST=/tmp/host.ghost
+# the original hostname, because volatility is somehow misrupted by systemd/nm
 ORGMAC=""
 
 # network stealther
@@ -126,10 +128,11 @@ then
         $CMD link set $INTERFACE up
     fi
     	/etc/init.d/network-manager start &>/dev/null
-#	hostnamectl set-hostname $RANDOM
-	hostname $RANDOM
+	hostname > $ORGHOST
+	hostnamectl set-hostname $RANDOM
+#	hostname $RANDOM
 	echo 'New hostname : '$(hostname)
-# TODO analyze hostname order change and revert
+# TODO analyze hostname order change and revert with xauth
 # hostnamectl is preferable because of network-manager
 	xauth add $(hostname)/$(xauth list | cut -d '/' -f 2 | tail -n 1)
 	chown $(echo $XAUTHORITY | cut -d '/' -f 3): $XAUTHORITY 2>/dev/null
@@ -204,8 +207,8 @@ then
 	echo 'Restoring hostname ...'
 	xauth remove $(hostname)/$(xauth list | cut -d '/' -f 2 | tail -n 1) 2>/dev/null
 	chown $(echo $XAUTHORITY | cut -d '/' -f 3): $XAUTHORITY 2>/dev/null
-#	hostnamectl set-hostname $(cat /etc/hostname)
-	hostname $(cat /etc/hostname)
+	hostnamectl set-hostname $(cat $ORGHOST)
+#	hostname $(cat /etc/hostname)
 	echo 'Reinitializing network interface ...'
 	echo 'If not connected or taking too long - reconnect manually'
 	echo
