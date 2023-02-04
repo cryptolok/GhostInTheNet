@@ -129,16 +129,19 @@ then
     fi
     	/etc/init.d/network-manager start &>/dev/null
 	hostname > $ORGHOST
-	hostnamectl set-hostname $RANDOM
+#	hostnamectl set-hostname $RANDOM
+	NAME=DESKTOP-$(tr -dc A-Z0-9 < /dev/urandom | head -c 7)
+# typical Windows-like name
+	nmcli general hostname "$NAME"
+# NetworkManager will force DHCP host regarless, so changing the hostname through it is more preferable
 #	hostname $RANDOM
 	echo 'New hostname : '$(hostname)
 # TODO analyze hostname order change and revert with xauth
-# hostnamectl is preferable because of network-manager
 	xauth add $(hostname)/$(xauth list | cut -d '/' -f 2 | tail -n 1)
-	chown $(echo $XAUTHORITY | cut -d '/' -f 3): $XAUTHORITY 2>/dev/null
+	chown $(echo "$XAUTHORITY" | cut -d '/' -f 3): "$XAUTHORITY" 2>/dev/null
 # ~/.Xauthority file must have user's privileges with an authorized hostname
 #	nmcli con up $INTERFACE &>/dev/null
-	echo 'Perform DHCP (unless you want to specify your own IP)? (y/n)'
+	echo 'Perform Ethernet DHCP (unless you want to specify your own IP or connect later)? (y/n)'
 	read dhcp
 	dhcp=${dhcp,,*}
 	dhcp=${dhcp::1}
@@ -205,9 +208,12 @@ then
 	ip6tables -D INPUT -i $INTERFACE --protocol icmpv6 --icmpv6-type echo-request -j DROP
 	ip6tables -D INPUT -i $INTERFACE --protocol icmpv6 --icmpv6-type neighbor-solicit -j DROP
 	echo 'Restoring hostname ...'
+    	/etc/init.d/network-manager start &>/dev/null
+#	nmcli con up $INTERFACE &>/dev/null
 	xauth remove $(hostname)/$(xauth list | cut -d '/' -f 2 | tail -n 1) 2>/dev/null
-	chown $(echo $XAUTHORITY | cut -d '/' -f 3): $XAUTHORITY 2>/dev/null
-	hostnamectl set-hostname $(cat $ORGHOST)
+	chown $(echo $XAUTHORITY | cut -d '/' -f 3): "$XAUTHORITY" 2>/dev/null
+#	hostnamectl set-hostname "$(cat $ORGHOST)"
+	nmcli general hostname "$(cat $ORGNAME)"
 #	hostname $(cat /etc/hostname)
 	echo 'Reinitializing network interface ...'
 	echo 'If not connected or taking too long - reconnect manually'
@@ -218,9 +224,7 @@ then
     else
         $CMD link set $INTERFACE up
     fi
-    	/etc/init.d/network-manager start &>/dev/null
-#	nmcli con up $INTERFACE &>/dev/null
-	echo 'Perform DHCP (unless you want to specify your own IP)? (y/n)'
+	echo 'Perform Ethernet DHCP (unless you want to specify your own IP or connect later)? (y/n)'
 	read dhcp
 	dhcp=${dhcp,,*}
 	dhcp=${dhcp::1}
