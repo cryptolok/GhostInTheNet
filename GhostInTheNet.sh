@@ -137,6 +137,8 @@ then
 # typical Windows-like name
 	nmcli general hostname "$NAME"
 # NetworkManager will force DHCP host regarless, so changing the hostname through it is more preferable
+	echo "127.0.0.1 $NAME" >> /etc/hosts
+# no DNS queries will be made to the "new" hostname
 #	hostname $RANDOM
 	echo 'New hostname : '$(hostname)
 # TODO analyze hostname order change and revert with xauth
@@ -217,6 +219,7 @@ then
 	chown $(echo $XAUTHORITY | cut -d '/' -f 3): "$XAUTHORITY" 2>/dev/null
 #	hostnamectl set-hostname "$(cat $ORGHOST)"
 	nmcli general hostname "$(cat $ORGNAME)"
+	sed -i '$ d' /etc/hosts
 #	hostname $(cat /etc/hostname)
 	echo 'Reinitializing network interface ...'
 	echo 'If not connected or taking too long - reconnect manually'
