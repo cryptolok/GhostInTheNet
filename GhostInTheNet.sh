@@ -137,7 +137,7 @@ then
 # typical Windows-like name
 	nmcli general hostname "$NAME"
 # NetworkManager will force DHCP host regarless, so changing the hostname through it is more preferable
-	echo "127.0.0.1 $NAME" >> /etc/hosts
+	echo -e "127.0.0.1\t$NAME" >> /etc/hosts
 # no DNS queries will be made to the "new" hostname
 #	hostname $RANDOM
 	echo 'New hostname : '$(hostname)
