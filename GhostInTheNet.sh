@@ -120,6 +120,8 @@ then
 # ignore ICMPv6/NDP neighbor solicitation requests type 135 code 0
 # IPv6 scanning isn't too much realistic though
 	echo 'Reinitializing network interface ...'
+	echo 'Releasing DHCP leases ...'
+        dhclient -r $INTERFACE
 	echo 'If not connected or taking too long - reconnect manually'
 	echo
 #	ifup $INTERFACE &> /dev/null
